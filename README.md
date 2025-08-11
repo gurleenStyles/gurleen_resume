@@ -11,11 +11,6 @@ A modern, responsive portfolio website built with Next.js, featuring AI-powered 
 - Custom cursor effects
 - Glow shadows and backdrop blur effects
 
-### 🤖 **AI-Powered Personalization**
-- Dynamic content personalization based on user interactions
-- Google Gemini AI integration for intelligent content adaptation
-- Real-time content optimization
-
 ### 📧 **Contact System**
 - Contact form with validation using React Hook Form and Zod
 - Server-side email sending via Nodemailer
@@ -45,61 +40,6 @@ A modern, responsive portfolio website built with Next.js, featuring AI-powered 
 - Contact form with real-time validation
 - Custom UI components (buttons, cards, forms, etc.)
 
-## Getting Started
-
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- SMTP email account (Gmail, Outlook, etc.)
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd gurleen_portfolio
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Set up environment variables:
-```bash
-cp .env.example .env
-```
-
-Fill in your environment variables:
-```env
-# Google Gemini AI
-GEMINI_API_KEY=your_gemini_api_key
-
-# SMTP Email Configuration
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_app_password
-CONTACT_RECEIVER_EMAIL=your_email@gmail.com
-```
-
-4. Run the development server:
-```bash
-npm run dev
-```
-
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Configuration
-
-### Email Setup (Gmail Example)
-1. Enable 2-factor authentication on your Google account
-2. Generate an App Password for your application
-3. Use the App Password in the `SMTP_PASS` environment variable
-
-### AI Personalization
-- Obtain a Google Gemini API key from Google AI Studio
-- Add it to your `.env` file as `GEMINI_API_KEY`
 
 ## Project Structure
 
@@ -118,22 +58,11 @@ src/
 │   ├── hero.tsx             # Hero section
 │   ├── projects.tsx         # Projects showcase
 │   └── skills.tsx           # Skills section
-├── ai/
-│   ├── flows/               # AI flow definitions
-│   └── genkit.ts            # AI configuration
 ├── hooks/                   # Custom React hooks
 └── lib/
     ├── types.ts             # TypeScript definitions
     └── utils.ts             # Utility functions
 ```
-
-## Deployment
-
-This project can be deployed on:
-- Vercel (recommended for Next.js)
-- Netlify
-- Firebase Hosting
-- Any platform supporting Node.js
 
 ## Contributing
 
