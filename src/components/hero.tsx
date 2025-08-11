@@ -53,12 +53,12 @@ export default function Hero({ content }: HeroProps) {
               },
             }}
           >
-            <motion.h3 variants={FADE_DOWN_ANIMATION_VARIANTS} className="font-code text-lg text-accent tracking-widest uppercase mb-4">
+            <motion.h3 variants={FADE_DOWN_ANIMATION_VARIANTS} className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-primary via-purple-400 to-accent mb-4">
                 Gurleen Kaur
             </motion.h3>
             <motion.h1
               variants={FADE_DOWN_ANIMATION_VARIANTS}
-              className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-primary via-purple-400 to-accent mb-4"
+              className="font-code text-lg text-accent tracking-widest uppercase mb-4"
             >
               {content.title}
             </motion.h1>
