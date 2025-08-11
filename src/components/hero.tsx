@@ -53,7 +53,7 @@ export default function Hero({ content }: HeroProps) {
               },
             }}
           >
-            <motion.h3 variants={FADE_DOWN_ANIMATION_VARIANTS} className="font-headline text-2xl md:text-3xl font-medium text-gray-300 mb-2">
+            <motion.h3 variants={FADE_DOWN_ANIMATION_VARIANTS} className="font-code text-lg text-accent tracking-widest uppercase mb-4">
                 Gurleen Kaur
             </motion.h3>
             <motion.h1
