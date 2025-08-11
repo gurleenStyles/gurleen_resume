@@ -78,41 +78,11 @@ export default function Home() {
   });
 
   const handleInteraction = useCallback((type: 'scroll' | 'click') => {
-    setInteractions(prev => {
-      const newInteractions = {
-        ...prev,
-        [type === 'scroll' ? 'scrolls' : 'clicks']: prev[type === 'scroll' ? 'scrolls' : 'clicks'] + 1,
-      };
-      
-      if (
-        !aiPersonalizationTriggered.current &&
-        !isPersonalizing &&
-        (newInteractions.scrolls + newInteractions.clicks > 5) 
-      ) {
-        aiPersonalizationTriggered.current = true;
-        setIsPersonalizing(true);
-        const interactionData = {
-          scrollDepth: scrollYProgress.get(),
-          clicks: newInteractions.clicks,
-          timeOnPage: performance.now(),
-        };
-
-        personalizePageContent({
-          interactionData: JSON.stringify(interactionData),
-          currentContent: JSON.stringify(content),
-        })
-        .then(newContent => {
-          if (newContent) {
-            setContent(newContent);
-          }
-        })
-        .finally(() => {
-          setIsPersonalizing(false);
-        });
-      }
-      return newInteractions;
-    });
-  }, [content, isPersonalizing, scrollYProgress]);
+    setInteractions(prev => ({
+      ...prev,
+      [type === 'scroll' ? 'scrolls' : 'clicks']: prev[type === 'scroll' ? 'scrolls' : 'clicks'] + 1,
+    }));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => handleInteraction('scroll');
@@ -126,6 +96,35 @@ export default function Home() {
       window.removeEventListener('click', handleClick);
     };
   }, [handleInteraction]);
+
+  useEffect(() => {
+    if (
+      !aiPersonalizationTriggered.current &&
+      !isPersonalizing &&
+      (interactions.scrolls + interactions.clicks > 5)
+    ) {
+      aiPersonalizationTriggered.current = true;
+      setIsPersonalizing(true);
+      const interactionData = {
+        scrollDepth: scrollYProgress.get(),
+        clicks: interactions.clicks,
+        timeOnPage: performance.now(),
+      };
+
+      personalizePageContent({
+        interactionData: JSON.stringify(interactionData),
+        currentContent: JSON.stringify(content),
+      })
+      .then(newContent => {
+        if (newContent) {
+          setContent(newContent);
+        }
+      })
+      .finally(() => {
+        setIsPersonalizing(false);
+      });
+    }
+  }, [interactions, content, isPersonalizing, scrollYProgress]);
 
   return (
     <>
