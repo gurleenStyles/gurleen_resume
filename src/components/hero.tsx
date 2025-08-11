@@ -4,6 +4,7 @@ import type { PageContent } from '@/lib/types'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import { ArrowDown } from 'lucide-react'
+import Image from 'next/image'
 
 type HeroProps = {
   content: PageContent['hero']
@@ -38,6 +39,22 @@ export default function Hero({ content }: HeroProps) {
         style={{ scale, position }}
         className="top-0 left-0 w-full h-full flex flex-col items-center justify-center"
       >
+        <motion.div
+          variants={FADE_DOWN_ANIMATION_VARIANTS}
+          initial="hidden"
+          animate="show"
+          transition={{ delay: 0.1 }}
+          className="mb-8"
+        >
+          <Image
+            src="https://placehold.co/128x128.png"
+            alt="My picture"
+            width={128}
+            height={128}
+            className="rounded-full border-4 border-primary/50 glow-shadow"
+            data-ai-hint="person"
+          />
+        </motion.div>
         <motion.h1
           variants={FADE_DOWN_ANIMATION_VARIANTS}
           initial="hidden"
