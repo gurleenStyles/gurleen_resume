@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Terminal } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -19,11 +20,21 @@ export default function Header() {
             CyberPunk Portfolio
           </span>
         </Link>
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="#skills" className="text-gray-300 hover:text-accent transition-colors">/skills</Link>
-          <Link href="#projects" className="text-gray-300 hover:text-accent transition-colors">/projects</Link>
-          <Link href="#contact" className="text-gray-300 hover:text-accent transition-colors">/contact</Link>
-        </nav>
+        <div className="flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+            <Link href="#skills" className="text-gray-300 hover:text-accent transition-colors">/skills</Link>
+            <Link href="#projects" className="text-gray-300 hover:text-accent transition-colors">/projects</Link>
+            <Link href="#contact" className="text-gray-300 hover:text-accent transition-colors">/contact</Link>
+          </nav>
+          <Image
+            src="https://placehold.co/40x40.png"
+            alt="My picture"
+            width={40}
+            height={40}
+            className="rounded-full"
+            data-ai-hint="person"
+          />
+        </div>
       </div>
     </motion.header>
   );
