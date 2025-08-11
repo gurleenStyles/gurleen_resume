@@ -1,4 +1,4 @@
-# Gurleen Portfolio
+#Portfolio
 
 A modern, responsive portfolio website built with Next.js, featuring AI-powered content personalization and secure communication options.
 
