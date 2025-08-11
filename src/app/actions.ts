@@ -12,9 +12,16 @@ export async function personalizePageContent(input: PersonalizePageContentInput)
   try {
     const result = await personalizeContent(input);
     if (result && result.personalizedContent) {
-      // The AI might return malformed JSON. We'll validate it by parsing.
-      const parsedContent = JSON.parse(result.personalizedContent);
-      return parsedContent as PageContent;
+      try {
+        // The AI might return malformed JSON. We'll validate it by parsing.
+        const parsedContent = JSON.parse(result.personalizedContent);
+        return parsedContent as PageContent;
+      } catch (parseError) {
+        console.error("AI personalization returned malformed JSON:", result.personalizedContent);
+        console.error("Parse error:", parseError);
+        // Optionally, you could attempt to fix common JSON issues here
+        return null;
+      }
     }
     return null;
   } catch (error) {

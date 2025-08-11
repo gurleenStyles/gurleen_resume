@@ -15,8 +15,8 @@ import { CustomCursor } from '@/components/custom-cursor';
 
 const initialContent: PageContent = {
   hero: {
-    title: "breaching digital frontiers.",
-    subtitle: "a cybersecurity intern's portfolio.",
+    title: "an upcoming cybersecurity specialist.",
+    subtitle: "breaching digital frontiers.",
     bio: "I'm a passionate cybersecurity enthusiast with a knack for digital forensics and ethical hacking. Currently navigating the complex world of cyber threats and defenses. I thrive on challenges, turning vulnerabilities into learning opportunities.",
   },
   skills: {

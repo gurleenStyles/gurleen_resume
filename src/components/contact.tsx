@@ -11,7 +11,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useToast } from '@/hooks/use-toast'
-import { Key, Send } from 'lucide-react'
+import { Key, Send, Info } from 'lucide-react'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 
 type ContactProps = {
   content: PageContent['contact']
@@ -34,15 +35,38 @@ export default function Contact({ content }: ContactProps) {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    toast({
-      title: "Transmission Sent",
-      description: "Your encrypted message has been securely dispatched.",
-      variant: 'default',
-      className: 'bg-primary text-primary-foreground border-accent',
-    })
-    form.reset()
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast({
+          title: "Transmission Sent",
+          description: "Your message has been securely dispatched.",
+          variant: 'default',
+          className: 'bg-primary text-primary-foreground border-accent',
+        });
+        form.reset();
+      } else {
+        toast({
+          title: "Transmission Failed",
+          description: data.error || "There was an error sending your message.",
+          variant: 'destructive',
+          className: 'bg-destructive text-destructive-foreground border-accent',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Transmission Failed",
+        description: (error as Error).message || "There was an error sending your message.",
+        variant: 'destructive',
+        className: 'bg-destructive text-destructive-foreground border-accent',
+      });
+    }
   }
   
   return (
@@ -100,17 +124,41 @@ export default function Contact({ content }: ContactProps) {
                 </FormItem>
               )}
             />
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
               <Button type="submit" size="lg" className="flex-1 bg-primary hover:bg-primary/80 text-primary-foreground font-bold font-headline glow-shadow">
                 <Send className="mr-2 h-4 w-4" />
                 Send Transmission
               </Button>
-              <Button asChild variant="outline" size="lg" className="flex-1 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-bold font-headline">
-                <a href="/pgp-key.txt" download>
-                  <Key className="mr-2 h-4 w-4" />
-                  Download PGP Key
-                </a>
-              </Button>
+              <div className="flex flex-col flex-1 items-center relative">
+                <Button asChild variant="outline" size="lg" className="w-full border-accent text-accent hover:bg-accent hover:text-accent-foreground font-bold font-headline">
+                  <a href="/pgp-key.txt" download>
+                    <Key className="mr-2 h-4 w-4" />
+                    Download PGP Key
+                  </a>
+                </Button>
+                <div className="mt-2 flex items-center justify-center w-full">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="text-xs text-muted-foreground hover:text-accent flex items-center gap-1 focus:outline-none underline underline-offset-2" type="button">
+                        Don't know what to do with this?
+                        <Info className="w-3 h-3" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="bg-card border-accent text-accent-foreground shadow-lg max-w-xs text-sm font-sans">
+                      <div className="font-bold mb-2">What is this PGP key?</div>
+                      <div className="space-y-2">
+                        <p>Hi there! If you're wondering what this is, my PGP key lets you securely communicate with me or verify my identity online.</p>
+                        <ul className="list-disc pl-4 space-y-1">
+                          <li><b>Proof of Identity:</b> You can verify that messages or files signed by me are genuinely from me.</li>
+                          <li><b>Send Encrypted Info:</b> If you want to send me sensitive details (like an offer letter), you can encrypt it with this key so only I can read it.</li>
+                          <li><b>Shows I Care About Security:</b> Including a PGP key shows I value privacy and secure communication—important for technical roles.</li>
+                        </ul>
+                        <p>If you want to know more or use it, just ask! 😊</p>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
             </div>
           </form>
         </Form>

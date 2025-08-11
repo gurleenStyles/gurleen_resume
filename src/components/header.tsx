@@ -16,7 +16,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2 group">
           <Terminal className="h-8 w-8 text-accent group-hover:animate-pulse" />
           <span className="text-xl font-bold font-headline text-gray-50 group-hover:text-accent transition-colors">
-            CyberPunk Portfolio
+            Portfolio
           </span>
         </Link>
         <div className="flex items-center gap-6">

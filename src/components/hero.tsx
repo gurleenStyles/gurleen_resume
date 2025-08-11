@@ -83,7 +83,7 @@ export default function Hero({ content }: HeroProps) {
             className="mt-8 md:mt-0 md:w-1/2 flex justify-center md:justify-end"
           >
             <Image
-              src="https://placehold.co/300x300.png"
+              src="/image.jpeg"
               alt="My picture"
               width={300}
               height={300}
