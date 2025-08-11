@@ -2,8 +2,8 @@
 
 import type { PageContent } from '@/lib/types'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
-import { ArrowDown } from 'lucide-react'
+import { useRef, useState, KeyboardEvent } from 'react'
+import { ArrowDown, Terminal, Download } from 'lucide-react'
 import Image from 'next/image'
 
 type HeroProps = {
@@ -17,10 +17,66 @@ const FADE_DOWN_ANIMATION_VARIANTS = {
 
 export default function Hero({ content }: HeroProps) {
   const targetRef = useRef<HTMLDivElement>(null)
+  const [input, setInput] = useState('')
+  const [output, setOutput] = useState(['Welcome to my portfolio! Type "help" for available commands.'])
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false)
+  
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ['end end', 'end start'],
   })
+
+  const handleCommand = (command: string) => {
+    const cmd = command.toLowerCase().trim()
+    let response = ''
+    
+    switch (cmd) {
+      case 'resume':
+        // Trigger resume download
+        const link = document.createElement('a')
+        link.href = '/resume.pdf'
+        link.download = 'gurleen_resume.pdf'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        response = 'Downloading resume...'
+        
+        // Only reset and show help for resume command
+        setOutput(prev => [...prev, `$ ${command}`, response])
+        setTimeout(() => {
+          setOutput(['Welcome to my portfolio! Type "help" for available commands.'])
+        }, 2000)
+        return
+        
+      case 'help':
+        response = 'Available commands:\n- resume: Download my resume\n- about: Learn about me\n- contact: Get my contact info\n- clear: Clear terminal'
+        break
+      case 'about':
+        response = content.bio + '\n\nType "back" to return to help menu.'
+        break
+      case 'contact':
+        response = 'Email: smartgurleen5@gmail.com\nLinkedIn: Connect with me!\nGitHub: Check out my projects\n\nType "back" to return to help menu.'
+        break
+      case 'back':
+        response = 'Available commands:\n- resume: Download my resume\n- about: Learn about me\n- contact: Get my contact info\n- clear: Clear terminal'
+        break
+      case 'clear':
+        setOutput(['Welcome to my portfolio! Type "help" for available commands.'])
+        return
+      default:
+        response = `Command "${command}" not found. Type "help" for available commands.`
+    }
+    
+    // For all other commands, just add to output without resetting
+    setOutput(prev => [...prev, `$ ${command}`, response])
+  }
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleCommand(input)
+      setInput('')
+    }
+  }
 
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8])
@@ -70,10 +126,55 @@ export default function Hero({ content }: HeroProps) {
             </motion.h2>
             <motion.p
               variants={FADE_DOWN_ANIMATION_VARIANTS}
-              className="max-w-2xl text-base md:text-lg text-gray-400"
+              className="max-w-2xl text-base md:text-lg text-gray-400 mb-6"
             >
               {content.bio}
             </motion.p>
+            
+            {/* CLI Terminal */}
+            <motion.div
+              variants={FADE_DOWN_ANIMATION_VARIANTS}
+              className="w-full max-w-md"
+            >
+              <button
+                onClick={() => setIsTerminalOpen(!isTerminalOpen)}
+                className="flex items-center gap-2 text-accent hover:text-primary transition-colors mb-2"
+              >
+                <Terminal className="w-4 h-4" />
+                <span className="text-sm">Open Terminal</span>
+              </button>
+              
+              {isTerminalOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="bg-black/80 backdrop-blur-sm border border-accent/30 rounded-lg p-4 font-mono text-sm"
+                >
+                  <div className="h-32 overflow-y-auto mb-2 space-y-1">
+                    {output.map((line, index) => (
+                      <div key={index} className={line.startsWith('$') ? 'text-accent' : 'text-gray-300'}>
+                        {line.split('\n').map((subline, subindex) => (
+                          <div key={subindex}>{subline}</div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-accent">$</span>
+                    <input
+                      type="text"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      className="flex-1 bg-transparent outline-none text-gray-300 placeholder-gray-500"
+                      placeholder="Type 'help' for commands..."
+                      autoFocus
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
           </motion.div>
           <motion.div
             variants={FADE_DOWN_ANIMATION_VARIANTS}
