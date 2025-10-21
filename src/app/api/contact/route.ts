@@ -6,6 +6,16 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, message } = await req.json();
 
+    // Debugging logs
+    console.log('Request body:', { name, email, message });
+    console.log('SMTP Config:', {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+      receiver: process.env.CONTACT_RECEIVER_EMAIL,
+    });
+
     // Set up Nodemailer transporter using SMTP credentials from .env
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -26,6 +36,7 @@ export async function POST(req: NextRequest) {
     };
 
     const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info);
     return NextResponse.json({ success: true, info });
   } catch (error) {
     console.error('Nodemailer error:', error);
